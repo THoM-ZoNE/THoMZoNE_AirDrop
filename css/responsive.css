@@ -1,0 +1,102 @@
+/* =========================================
+   RESPONSIVE.CSS - Racoon Bank
+   Breakpoints: 1080px, 768px, 560px
+   ========================================= */
+
+/* ---------- Tablet / small desktop (<=1080px) ---------- */
+@media (max-width: 1080px) {
+  .steps-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero-title {
+    max-width: 100%;
+  }
+}
+
+/* ---------- Tablet / mobile nav switch (<=768px) ---------- */
+@media (max-width: 768px) {
+  .main-nav {
+    display: none;
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: rgba(15, 13, 10, 0.98);
+    border-top: 1px solid var(--color-divider);
+    border-bottom: 1px solid var(--color-divider);
+    box-shadow: var(--shadow-md);
+    z-index: 60;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-cta {
+    display: none;
+  }
+
+  .hero-stats-mini {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .countdown-grid {
+    max-width: 100%;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+}
+
+/* ---------- Mobile (<=560px) ---------- */
+@media (max-width: 560px) {
+  .countdown-grid {
+    grid-template-columns: repeat(2, minmax(110px, 140px));
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .chart-panel,
+  .table-panel,
+  .step-card {
+    padding: var(--space-5);
+  }
+
+  .footer-social {
+    justify-content: flex-start;
+  }
+}

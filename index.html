@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Racoon Bank | Automatic $Jimothy Vault Rewards</title>
+  <meta name="description" content="Racoon Bank - Automatic $Jimothy reward vault for pump.fun token creator reward distribution among holders.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css?v=4">
+  <link rel="stylesheet" href="css/variables.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/countdown.css?v=4">
+  <link rel="stylesheet" href="css/stats.css?v=4">
+  <link rel="stylesheet" href="css/responsive.css?v=4">
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header" id="header">
+    <div class="container header-inner">
+      <a href="#hero" class="logo">
+        <span class="logo-icon">🦝</span>
+        <span class="logo-text">Racoon<span class="accent">Bank</span></span>
+      </a>
+      <nav class="main-nav" id="mainNav">
+        <a href="#hero">Homepage</a>
+        <a href="#how-it-works">Vault Flow</a>
+        <a href="#countdown">Countdown</a>
+        <a href="#stats">Statistics</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a href="#stats" class="btn btn-primary nav-cta">Dashboard</a>
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        aria-label="Menu"
+        aria-expanded="false"
+        aria-controls="mainNav"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <span class="badge">🏦 Pumpfun • RacoonBank • Jimothy</span>
+      <h1 class="hero-title">
+        Pump.fun Creator Reward, <span class="accent">automatic</span> to the $RacoonBank holders
+      </h1>
+      <p class="hero-subtitle">
+        Racoon Bank automatically claims the pump.fun creator reward, swaps it into $Jimothy,
+        and distributes it on-chain to eligible holders — without any manual work, guarded like a real vault.
+      </p>
+      <div class="hero-actions">
+        <a href="#countdown" class="btn btn-primary btn-lg">Next Payout</a>
+        <a href="#stats" class="btn btn-outline btn-lg">Live Vault Stats</a>
+      </div>
+      <div class="hero-stats-mini">
+        <div><strong id="miniHolders">0</strong><span>Vault holders so far</span></div>
+        <div><strong id="miniReward">0</strong><span>$Jimothy distributed</span></div>
+        <div><strong id="miniRounds">0</strong><span>Completed payout rounds</span></div>
+      </div>
+    </div>
+</section>
+  <!-- CONTRACT ADDRESS -->
+
+  <div class="container">
+    <div class="ca-slip" id="caSlip">
+  <div class="ca-slip-header">
+    <span class="ca-slip-label">Vault Deposit Slip</span>
+    <span class="ca-slip-network">RacoonBank</span>
+  </div>
+
+  <div class="ca-slip-body">
+    <span class="ca-slip-caption">Contract Address</span>
+    <div class="ca-typewriter" id="caTypewriter">
+      <span id="caText"></span><span class="ca-cursor">|</span>
+    </div>
+  </div>
+  <button class="ca-copy-btn" id="caCopyBtn" data-ca="PASTE_CA_ADDRESS_HERE">
+    <span id="caCopyLabel">Copy Address</span>
+  </button>
+
+  <div class="ca-stamp" id="caStamp">VERIFIED</div>
+</div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <section class="countdown-section" id="countdown">
+    <div class="container">
+      <h2 class="section-title">Next <span class="accent">Payout</span> Round</h2>
+      <p class="section-subtitle">The vault countdown shows the time until the next automatic $Jimothy distribution.</p>
+      <div class="countdown-grid" id="countdownGrid">
+        <div class="countdown-box">
+          <span class="countdown-value" id="cdHours">00</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-value" id="cdMinutes">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-box">
+          <span class="countdown-value" id="cdSeconds">00</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+      <p class="countdown-note" id="countdownNote">The vault countdown automatically restarts after each round.</p>
+    </div>
+</section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How The Vault Works</h2>
+      <p class="section-subtitle">In three simple steps, a fully automated, on-chain reward cycle.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3>Reward Claim</h3>
+          <p>The system automatically claims the accumulated pump.fun creator reward into the treasury wallet.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3>Swap To $Jimothy</h3>
+          <p>The claimed reward is swapped into $Jimothy, preparing the vault balance for the next distribution round.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3>Automatic Payout</h3>
+          <p>The swapped $Jimothy is automatically distributed in batch transactions directly to eligible holders' wallets.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section" id="stats">
+    <div class="container">
+      <h2 class="section-title">Live <span class="accent">Vault Statistics</span></h2>
+      <p class="section-subtitle">Real-time data on the distributed $Jimothy amount and participating holders.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon">👛</span>
+          <span class="stat-value" id="statHolders">0</span>
+          <span class="stat-label">Vault Participants</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🪙</span>
+          <span class="stat-value" id="statReward">0.00</span>
+          <span class="stat-label" data-stat-total-label>Total Distributed $Jimothy</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🔐</span>
+          <span class="stat-value" id="statRounds">0</span>
+          <span class="stat-label">Closed Payout Rounds</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⚡</span>
+          <span class="stat-value" id="statAvg">0.00</span>
+          <span class="stat-label" data-stat-avg-label>Average $Jimothy / Holder</span>
+        </div>
+      </div>
+
+      <div class="chart-panel">
+        <h3>Recent Vault Distributions</h3>
+        <canvas id="distributionChart" height="260"></canvas>
+      </div>
+
+      <div class="table-panel">
+        <h3>Recent Vault Transactions</h3>
+        <div class="table-scroll">
+          <table id="recentTable">
+            <thead>
+              <tr><th>Time</th><th>Wallet</th><th>$Jimothy Amount</th><th>Transaction</th></tr>
+            </thead>
+            <tbody id="recentTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <h2 class="section-title">Frequently <span class="accent">Asked Questions</span></h2>
+      <div class="faq-list" id="faqList">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Where does the $Jimothy come from? <span>+</span>
+          </button>
+          <div class="faq-answer">
+            <p>The system automatically claims the pump.fun creator reward to the treasury wallet, swaps it to Jimothy, and then distributes the Jimothy tokens among eligible holders.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            What token do I need to hold to participate? <span>+</span>
+          </button>
+          <div class="faq-answer">
+            <p>You need to hold at least 250,000 RacoonBank tokens in your wallet at the time of the snapshot to be eligible for the airdrop.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Do I need to do anything to claim the reward? <span>+</span>
+          </button>
+          <div class="faq-answer">
+            <p>No, the vault automatically sends the $Jimothy directly to your wallet via on-chain transactions.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Where can I verify the transactions? <span>+</span>
+          </button>
+          <div class="faq-answer">
+            <p>All distributions are available via Solscan links in the vault statistics table.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">🦝</span>
+        <span class="logo-text">Racoon<span class="accent">Bank</span></span>
+        <p>Automated $Jimothy reward vault based on pump.fun creator reward.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#hero">Home</a>
+        <a href="#how-it-works">Vault Flow</a>
+        <a href="#countdown">Countdown</a>
+        <a href="#stats">Statistics</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-social">
+        <a href="https://x.com/racoonbank" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">𝕏</a>
+        <a href="https://t.me/racoonbank" target="_blank" rel="noopener noreferrer" aria-label="Telegram">TG</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="year"></span> Website.com All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js?v=4"></script>
+  <script src="js/countdown.js?v=4"></script>
+  <script src="js/stats.js?v=5"></script>
+  <script src="js/chart.js?v=5"></script>
+  <script src="js/main.js?v=4"></script>
+  <script src="js/ca.js?v=9"></script>
+  <script src="js/copy_ca.js?v=2"></script>
+
+ 
+</body>
+</html>

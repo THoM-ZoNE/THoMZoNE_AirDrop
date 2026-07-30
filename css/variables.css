@@ -1,0 +1,120 @@
+/* =========================================
+   VARIABLES.CSS - Racoon Bank
+   Dark vault theme: charcoal-brown surfaces, gold accent
+   ========================================= */
+
+:root {
+  /* ---- Typography ---- */
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'Inter', 'Helvetica Neue', sans-serif;
+
+  --text-xs:   clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  --text-3xl:  clamp(2.5rem, 1rem + 4vw, 5rem);
+  --text-hero: clamp(2.75rem, 1rem + 5.5vw, 6.5rem);
+
+  /* ---- Spacing (4px system) ---- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* ---- Radius ---- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ---- Transitions ---- */
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Content widths ---- */
+  --content-narrow: 640px;
+  --content-default: 1120px;
+  --content-wide: 1280px;
+  --content-full: 100%;
+
+  /* =========================================
+     LIGHT MODE (fallback, project is dark-first)
+     ========================================= */
+  --color-bg:               #f6f1e7;
+  --color-surface:          #fbf7ee;
+  --color-surface-2:        #ffffff;
+  --color-surface-offset:   #efe6d3;
+  --color-surface-dynamic:  #e6d9bd;
+  --color-divider:          #ddccaa;
+  --color-border:           #d1bd94;
+
+  --color-text:             #241a0f;
+  --color-text-muted:       #6b5a3f;
+  --color-text-faint:       #a9976f;
+  --color-text-inverse:     #fbf7ee;
+
+  --color-primary:          #b9760f;
+  --color-primary-hover:    #96600c;
+  --color-primary-active:   #764a09;
+  --color-primary-highlight:#f0dcaf;
+
+  --color-success:  #3f7d32;
+  --color-warning:  #a15a17;
+  --color-error:    #9c2f3a;
+  --color-notification: #9c2f3a;
+
+  --shadow-sm: 0 1px 2px rgba(40, 25, 10, 0.08);
+  --shadow-md: 0 8px 24px rgba(40, 25, 10, 0.12);
+  --shadow-lg: 0 20px 48px rgba(40, 25, 10, 0.18);
+}
+
+/* =========================================
+   DARK MODE (default vault theme for Racoon Bank)
+   ========================================= */
+:root, [data-theme="dark"] {
+  --color-bg:               #0f0d0a;
+  --color-surface:          rgba(28, 22, 16, 0.86);
+  --color-surface-2:        rgba(38, 29, 20, 0.9);
+  --color-surface-offset:   rgba(62, 44, 24, 0.55);
+  --color-surface-dynamic:  rgba(72, 52, 28, 0.7);
+  --color-divider:          rgba(242, 178, 77, 0.14);
+  --color-border:           rgba(242, 178, 77, 0.2);
+
+  --color-text:             #f7ead6;
+  --color-text-muted:       #cbb898;
+  --color-text-faint:       #8d7752;
+  --color-text-inverse:     #241507;
+
+  --color-primary:          #f2b24d;
+  --color-primary-hover:    #e59a2c;
+  --color-primary-active:   #cf7d18;
+  --color-primary-highlight:rgba(242, 178, 77, 0.16);
+
+  --color-success:  #6daa45;
+  --color-warning:  #e59a2c;
+  --color-error:    #d1637a;
+  --color-notification: #d1637a;
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+/* Brand-specific tokens (Racoon Bank identity) */
+:root {
+  --brand-gold: #f2b24d;
+  --brand-gold-deep: #cf7d18;
+  --brand-bronze: #7a5326;
+  --brand-vault-glass: rgba(28, 22, 16, 0.82);
+}

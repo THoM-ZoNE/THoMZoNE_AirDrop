@@ -1,0 +1,81 @@
+/* =========================================
+   COUNTDOWN.CSS - Racoon Bank
+   Vault-style countdown display
+   ========================================= */
+
+.countdown-section {
+  position: relative;
+  background: radial-gradient(circle at 50% 0%, rgba(242, 178, 77, 0.08), transparent 60%);
+}
+
+.countdown-section .container {
+  text-align: center;
+}
+
+.countdown-section .section-title,
+.countdown-section .section-subtitle,
+.countdown-note {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+#countdownGrid {
+  justify-content: center !important;
+  margin-inline: auto !important;
+}
+
+.countdown-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 140px;
+  min-height: 132px;
+  padding: var(--space-6) var(--space-3);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(38, 29, 20, 0.92), rgba(20, 15, 10, 0.92));
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(242, 178, 77, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.countdown-value {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--brand-gold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.countdown-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+
+.countdown-note {
+  text-align: center;
+  margin-top: var(--space-6);
+}

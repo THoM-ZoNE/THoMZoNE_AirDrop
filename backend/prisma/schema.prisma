@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Snapshot {
+  id                       String           @id @default(cuid())
+  createdAt                DateTime         @default(now())
+  sourceRewardTx           String?
+
+  grossRewardPayoutRaw     BigInt
+  rewardMint               String
+  rewardSymbol             String
+
+  reservedSafetyPayoutRaw  BigInt
+  buybackPayoutRaw         BigInt
+  holderPoolPayoutRaw      BigInt
+
+  holderTokenMint          String
+
+  holders                  SnapshotHolder[]
+  distributions            Distribution[]
+}
+
+model SnapshotHolder {
+  id                 String   @id @default(cuid())
+  snapshotId         String
+
+  owner              String
+
+  holderTokenRaw     BigInt
+
+  finalPayoutRaw     BigInt
+
+  snapshot           Snapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@index([snapshotId])
+  @@index([owner])
+}
+
+model Distribution {
+  id                 String   @id @default(cuid())
+  snapshotId         String
+  createdAt          DateTime @default(now())
+
+  owner              String
+  recipientType      String
+  payoutRawSent      BigInt
+
+  txSignature        String?
+  status             String
+  errorMessage       String?
+
+  snapshot           Snapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@index([snapshotId])
+  @@index([owner])
+  @@index([status])
+}
+
+model RewardEvent {
+  id                 String   @id @default(cuid())
+  createdAt          DateTime @default(now())
+
+  source             String
+  sourceTx           String?  @unique
+
+  grossPayoutRaw     BigInt
+  rewardMint         String
+
+  status             String
+  snapshotId         String?
+  distributedAt      DateTime?
+  notes              String?
+}
+
+model JobLock {
+  key                String   @id
+  lockedAt           DateTime
+}

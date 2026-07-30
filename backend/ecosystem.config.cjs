@@ -1,8 +1,8 @@
 module.exports = {
   apps: [
     {
-      name: "airdroptest-api",
-      cwd: "/opt/airdroptest/airdropfarm-backend",
+      name: "tzairdrop-api",
+      cwd: "/opt/thomzone-airdrop/backend",
       script: "./dist/src/index.js",
       instances: 1,
       exec_mode: "fork",
@@ -14,8 +14,8 @@ module.exports = {
       }
     },
     {
-      name: "airdroptest-worker",
-      cwd: "/opt/airdroptest/airdropfarm-backend",
+      name: "tzairdrop-worker",
+      cwd: "/opt/thomzone-airdrop/backend",
       script: "./dist/src/worker.js",
       instances: 1,
       exec_mode: "fork",

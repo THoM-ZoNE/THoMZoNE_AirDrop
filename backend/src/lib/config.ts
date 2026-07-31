@@ -12,16 +12,19 @@ const schema = z.object({
   DISTRIBUTION_WALLET_PRIVATE_KEY: z.string().optional().default(""),
   DISTRIBUTION_WALLET_SECRET_KEY_JSON: z.string().optional().default(""),
 
-  HOLDER_TOKEN_MINT: z.string().min(32),
+  HOLDER_TOKEN_A_MINT: z.string().min(32),
+  HOLDER_TOKEN_B_MINT: z.string().min(32),
 
   REWARD_TOKEN_MINT: z.string().min(32),
-  REWARD_SYMBOL: z.string().default("JIMOTHY"),
+  REWARD_SYMBOL: z.string().default("USDC"),
 
   MIN_HOLDER_AMOUNT_RAW: z.coerce.bigint().default(1n),
   MIN_REWARD_PAYOUT_RAW: z.coerce.bigint().default(1n),
 
   EXCLUDED_WALLETS: z.string().optional().default(""),
-
+  TOKEN_B_POOL_BPS: z.coerce.number().int().min(0).max(10_000).default(1500),
+  TOKEN_A_POOL_BPS: z.coerce.number().int().min(0).max(10_000).default(3000),
+  DUAL_HOLDER_BONUS_BPS: z.coerce.number().int().min(0).max(10_000).default(500),
   SAFETY_BUFFER_BPS: z.coerce.number().int().min(0).max(10_000).default(300),
 
   MAX_RECIPIENTS_PER_TX: z.coerce.number().int().min(1).max(8).default(4),
@@ -128,7 +131,8 @@ export const config = {
     ? Uint8Array.from(JSON.parse(distributionWalletSecretKeyJson))
     : new Uint8Array(),
 
-  holderTokenMint: env.HOLDER_TOKEN_MINT,
+  holderTokenAMint: env.HOLDER_TOKEN_A_MINT,
+  holderTokenBMint: env.HOLDER_TOKEN_B_MINT,
 
   rewardTokenMint: env.REWARD_TOKEN_MINT,
   rewardSymbol: env.REWARD_SYMBOL,
@@ -140,7 +144,9 @@ export const config = {
     .split(",")
     .map((value) => value.trim())
     .filter(Boolean),
-
+  tokenAPoolBps: env.TOKEN_A_POOL_BPS,
+  tokenBPoolBps: env.TOKEN_B_POOL_BPS,
+  dualHolderBonusBps: env.DUAL_HOLDER_BONUS_BPS,
   safetyBufferBps: env.SAFETY_BUFFER_BPS,
 
   maxRecipientsPerTx: env.MAX_RECIPIENTS_PER_TX,

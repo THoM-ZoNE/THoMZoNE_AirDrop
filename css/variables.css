@@ -1,66 +1,24 @@
-/* =========================================
-   VARIABLES.CSS - THoMZoNE Airdrop
-   ========================================= */
-
 :root {
-  /* Layout */
-  --content-default: 1180px;
-
-  /* Spacing scale */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
-  --space-32: 8rem;
-
-  /* Typography scale */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.75rem;
-  --text-2xl: 2.5rem;
-
-  /* Fonts */
-  --font-display: 'Orbitron', sans-serif;
-  --font-body: 'Inter', sans-serif;
-
-  /* Brand colors */
-  --brand-gold: #f2b24d;
-  --brand-gold-deep: #cf7d18;
-  --brand-vault-glass: rgba(255, 255, 255, 0.04);
-
-  /* Core colors */
-  --color-bg: #0b090
-
-7;
+  --color-bg: #05060a;
+  --color-bg-alt: #0b0e17;
   --color-surface: #10141f;
   --color-surface-2: #161b2b;
+  --color-border: rgba(255, 255, 255, 0.08);
   --color-text: #e8ecf7;
   --color-text-muted: #93a0bd;
-  --color-text-faint: #5c6478;
-  --color-text-inverse: #0b0907;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-divider: rgba(255, 255, 255, 0.08);
-  --color-primary: #7c5cff;
+  --color-accent: #7c5cff;
+  --color-accent-2: #14f1c6;
+  --color-accent-gradient: linear-gradient(135deg, #7c5cff 0%, #14f1c6 100%);
 
-  /* Radius */
+  --font-heading: 'Orbitron', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
-  --radius-xl: 28px;
-  --radius-full: 999px;
 
-  /* Shadows & transitions */
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
-  --shadow-md: 0 6px 20px rgba(0,0,0,0.3);
   --shadow-glow: 0 0 40px rgba(124, 92, 255, 0.25);
-  --transition-interactive: 0.3s ease;
+  --transition: 0.3s ease;
+
+  --container-width: 1180px;
 }

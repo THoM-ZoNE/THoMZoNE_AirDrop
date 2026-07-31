@@ -81,6 +81,26 @@ export async function claimAndRegisterRewardIfAny() {
       throw new Error("Missing DISTRIBUTION_WALLET_PUBLIC_KEY");
     }
 
+    // ✅ Balance előellenőrzés — Pump.fun API hívás ELŐTT
+    // Csak akkor claimelünk ha a creator wallet elérte a CLAIM_MIN_RAW küszöböt
+    // (0.15 SOL = 150_000_000 lamport alapértelmezetten)
+    if (config.claimMinRaw > 0n) {
+      const preCheckBalance = await getSolBalanceRaw(wallet);
+      if (preCheckBalance < config.claimMinRaw) {
+        return {
+          ok: true,
+          skipped: true,
+          reason:
+            `creator wallet balance below CLAIM_MIN_RAW threshold ` +
+            `(${preCheckBalance.toString()} < ${config.claimMinRaw.toString()})`,
+          currentBalanceRaw: preCheckBalance.toString(),
+          currentBalanceSol: (Number(preCheckBalance) / LAMPORTS_PER_SOL).toFixed(6),
+          claimMinRaw: config.claimMinRaw.toString(),
+          claimMinSol: (Number(config.claimMinRaw) / LAMPORTS_PER_SOL).toFixed(6)
+        };
+      }
+    }
+
     const before = await getSolBalanceRaw(wallet);
     const claim = (await claimCreatorFees()) as ClaimResult;
 

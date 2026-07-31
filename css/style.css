@@ -174,12 +174,14 @@ body {
   gap: 16px;
   margin-bottom: 56px;
   flex-wrap: wrap;
+  justify-content:center;
 }
 
 .hero-stats-mini {
   display: flex;
   gap: 40px;
   flex-wrap: wrap;
+  justify-content:center;
 }
 
 .hero-stats-mini div {
@@ -221,26 +223,29 @@ body {
 
 .hero-contracts {
   display: grid;
-  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
   margin-top: 1.5rem;
-  width: min(100%, 720px);
+  width: min(100%, 900px);
 }
 
 .contract-chip {
   position: relative;
   overflow: hidden;
-  display: grid;
-  gap: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
   width: 100%;
-  padding: 0.9rem 1rem;
-  border: 1px solid rgba(255,255,255,0.14);
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
   backdrop-filter: blur(10px);
   text-align: left;
   color: #fff;
   cursor: pointer;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition: transform 180ms ease, border-color 180ms ease;
 }
 
 .contract-chip::before {
@@ -261,7 +266,7 @@ body {
 
 .contract-chip:hover {
   transform: translateY(-2px);
-  border-color: rgba(255,255,255,0.24);
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 .contract-label {
@@ -282,6 +287,12 @@ body {
 @keyframes contractScan {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@media (max-width: 768px) {
+  .hero-contracts {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {

@@ -1,115 +1,86 @@
-/* =========================================
-   STATS.CSS - Racoon Bank
-   Live vault statistics, chart panel, transactions table
-   ========================================= */
+.stats-section {
+  background: var(--color-bg-alt);
+}
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-4);
-  margin-bottom: var(--space-10);
+  gap: 24px;
+  margin-bottom: 60px;
 }
 
 .stat-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-6);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-divider);
-  box-shadow: var(--shadow-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 32px 24px;
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--color-accent-2);
+  transform: translateY(-4px);
 }
 
 .stat-icon {
-  font-size: var(--text-lg);
-  margin-bottom: var(--space-1);
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 12px;
 }
 
 .stat-value {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  color: var(--brand-gold);
-  font-variant-numeric: tabular-nums;
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-accent-2);
+  margin-bottom: 8px;
 }
 
 .stat-label {
   color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
 }
 
-/* ---------- Chart panel ---------- */
-.chart-panel {
-  padding: var(--space-8);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-divider);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: var(--space-10);
-}
-
-.chart-panel h3 {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  color: var(--color-text);
-  margin-bottom: var(--space-6);
-}
-
-/* ---------- Table panel ---------- */
+.chart-panel,
 .table-panel {
-  padding: var(--space-8);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-divider);
-  box-shadow: var(--shadow-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  margin-bottom: 32px;
 }
 
+.chart-panel h3,
 .table-panel h3 {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  color: var(--color-text);
-  margin-bottom: var(--space-6);
+  margin-bottom: 20px;
+  font-size: 1.1rem;
 }
 
 .table-scroll {
   overflow-x: auto;
 }
 
-#recentTable {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 560px;
-}
-
-#recentTable thead th {
+#recentTable th,
+#recentTable td {
+  padding: 12px 16px;
   text-align: left;
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-faint);
-  border-bottom: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
 }
 
-#recentTable tbody td {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
+#recentTable th {
   color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-divider);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
 }
 
-#recentTable tbody tr:hover td {
-  color: var(--color-text);
-  background: rgba(242, 178, 77, 0.04);
-}
-
-#recentTable tbody td a {
-  color: var(--brand-gold);
+#recentTable td.sol-amount {
+  color: var(--color-accent-2);
   font-weight: 600;
 }
 
-#recentTable tbody td a:hover {
-  text-decoration: underline;
+#recentTable a {
+  color: var(--color-accent);
 }

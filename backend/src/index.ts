@@ -151,7 +151,8 @@ app.post("/snapshots", async (req, res) => {
       buybackPayoutRaw: snapshot.buybackPayoutRaw.toString(),
       holderPoolPayoutRaw: snapshot.holderPoolPayoutRaw.toString(),
       reservedSafetyPayoutRaw: snapshot.reservedSafetyPayoutRaw.toString(),
-      holderTokenMint: snapshot.holderTokenMint,
+      holderTokenAMint: snapshot.holderTokenAMint,
+      holderTokenBMint: snapshot.holderTokenBMint,
       rewardMint: snapshot.rewardMint,
       rewardSymbol: snapshot.rewardSymbol
     });

@@ -20,7 +20,17 @@ try {
     reservedSafetyPayoutRaw: snapshot.reservedSafetyPayoutRaw.toString(),
     rewardMint: snapshot.rewardMint,
     rewardSymbol: snapshot.rewardSymbol,
-    holderTokenMint: snapshot.holderTokenMint
+    holderTokenAMint: snapshot.holderTokenAMint,
+    holderTokenBMint: snapshot.holderTokenBMint,
+    holderPreview: snapshot.holders.slice(0, 5).map((holder) => ({
+      owner: holder.owner,
+      inTokenA: holder.inTokenA,
+      inTokenB: holder.inTokenB,
+      bonusApplied: holder.bonusApplied,
+      tokenARaw: holder.tokenARaw.toString(),
+      tokenBRaw: holder.tokenBRaw.toString(),
+      finalPayoutRaw: holder.finalPayoutRaw.toString()
+    }))
   });
 
   console.log("[runSnapshot] finished");

@@ -22,9 +22,7 @@ const schema = z.object({
   MIN_REWARD_PAYOUT_RAW: z.coerce.bigint().default(1n),
 
   EXCLUDED_WALLETS: z.string().optional().default(""),
-  TOKEN_B_POOL_BPS: z.coerce.number().int().min(0).max(10_000).default(1500),
-  TOKEN_A_POOL_BPS: z.coerce.number().int().min(0).max(10_000).default(3000),
-  DUAL_HOLDER_BONUS_BPS: z.coerce.number().int().min(0).max(10_000).default(500),
+
   SAFETY_BUFFER_BPS: z.coerce.number().int().min(0).max(10_000).default(300),
 
   MAX_RECIPIENTS_PER_TX: z.coerce.number().int().min(1).max(8).default(4),
@@ -144,9 +142,7 @@ export const config = {
     .split(",")
     .map((value) => value.trim())
     .filter(Boolean),
-  tokenAPoolBps: env.TOKEN_A_POOL_BPS,
-  tokenBPoolBps: env.TOKEN_B_POOL_BPS,
-  dualHolderBonusBps: env.DUAL_HOLDER_BONUS_BPS,
+  
   safetyBufferBps: env.SAFETY_BUFFER_BPS,
 
   maxRecipientsPerTx: env.MAX_RECIPIENTS_PER_TX,

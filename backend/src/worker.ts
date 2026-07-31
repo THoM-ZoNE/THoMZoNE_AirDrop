@@ -27,7 +27,8 @@ console.log("claimCron:", config.claimCron);
 console.log("cronEnabled:", config.cronEnabled);
 console.log("cronSnapshot:", config.cronSnapshot);
 console.log("cronDistribute:", config.cronDistribute);
-console.log("HOLDER_TOKEN_MINT:", process.env.HOLDER_TOKEN_MINT);
+console.log("HOLDER_TOKEN_A_MINT:", process.env.HOLDER_TOKEN_A_MINT);
+console.log("HOLDER_TOKEN_B_MINT:", process.env.HOLDER_TOKEN_B_MINT);
 
 if (config.claimEnabled) {
   cron.schedule(config.claimCron, async () => {

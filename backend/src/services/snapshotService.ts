@@ -60,21 +60,25 @@ function buildDistribution(
 
   const scored: ScoredHolder[] = [];
   for (const [owner, data] of holderMap.entries()) {
-    const baseScore = data.tokenARaw + data.tokenBRaw;
-    const bonusApplied = data.inTokenA && data.inTokenB;
-    const weightedScore = bonusApplied ? baseScore * 2n : baseScore;
+  const bonusApplied = data.inTokenA && data.inTokenB;
 
-    scored.push({
-      owner,
-      inTokenA: data.inTokenA,
-      inTokenB: data.inTokenB,
-      tokenARaw: data.tokenARaw,
-      tokenBRaw: data.tokenBRaw,
-      weightedScore,
-      bonusApplied,
-      finalPayoutRaw: 0n,
-    });
-  }
+  const weightedScore = bonusApplied
+    ? data.tokenARaw * 2n
+    : data.inTokenA
+      ? data.tokenARaw
+      : data.tokenBRaw;
+
+  scored.push({
+    owner,
+    inTokenA: data.inTokenA,
+    inTokenB: data.inTokenB,
+    tokenARaw: data.tokenARaw,
+    tokenBRaw: data.tokenBRaw,
+    weightedScore,
+    bonusApplied,
+    finalPayoutRaw: 0n,
+  });
+}
 
   const totalWeightedScore = scored.reduce((sum, h) => sum + h.weightedScore, 0n);
 

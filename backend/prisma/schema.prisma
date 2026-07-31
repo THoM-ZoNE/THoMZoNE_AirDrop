@@ -7,35 +7,41 @@ datasource db {
 }
 
 model Snapshot {
-  id                       String           @id @default(cuid())
-  createdAt                DateTime         @default(now())
-  sourceRewardTx           String?
+  id                      String   @id @default(cuid())
+  createdAt               DateTime @default(now())
+  sourceRewardTx          String?
 
-  grossRewardPayoutRaw     BigInt
-  rewardMint               String
-  rewardSymbol             String
+  grossRewardPayoutRaw    BigInt
+  rewardMint              String
+  rewardSymbol            String
 
-  reservedSafetyPayoutRaw  BigInt
-  buybackPayoutRaw         BigInt
-  holderPoolPayoutRaw      BigInt
+  reservedSafetyPayoutRaw BigInt
+  buybackPayoutRaw        BigInt
+  holderPoolPayoutRaw     BigInt
 
-  holderTokenMint          String
+  holderTokenAMint        String
+  holderTokenBMint        String
 
-  holders                  SnapshotHolder[]
-  distributions            Distribution[]
+  holders                 SnapshotHolder[]
+  distributions           Distribution[]
 }
 
 model SnapshotHolder {
-  id                 String   @id @default(cuid())
-  snapshotId         String
+  id           String  @id @default(cuid())
+  snapshotId   String
 
-  owner              String
+  owner        String
 
-  holderTokenRaw     BigInt
+  inTokenA     Boolean @default(false)
+  inTokenB     Boolean @default(false)
 
-  finalPayoutRaw     BigInt
+  tokenARaw    BigInt  @default(0)
+  tokenBRaw    BigInt  @default(0)
+  bonusApplied Boolean @default(false)
 
-  snapshot           Snapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  finalPayoutRaw BigInt
+
+  snapshot     Snapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
 
   @@index([snapshotId])
   @@index([owner])

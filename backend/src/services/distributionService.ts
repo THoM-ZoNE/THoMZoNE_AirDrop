@@ -38,6 +38,7 @@ export async function distributeSnapshot(snapshotId: string) {
   }> = [];
 
   for (const group of groups) {
+  await new Promise((resolve) => setTimeout(resolve, 1500));
     try {
       const transaction = await sendRewardTokenBatch(
         group

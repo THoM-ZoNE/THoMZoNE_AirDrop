@@ -102,29 +102,36 @@ export async function claimAndRegisterRewardIfAny() {
     }
 
     const before = await getSolBalanceRaw(wallet);
-    const claim = (await claimCreatorFees()) as ClaimResult;
+const claim = (await claimCreatorFees()) as ClaimResult;
 
-    if (isDryRunClaim(claim)) {
-      return {
-        ok: true,
-        dryRun: true,
-        beforeRaw: before.toString(),
-        beforeSol: Number(before) / LAMPORTS_PER_SOL
-      };
-    }
+if (isDryRunClaim(claim)) {
+  return {
+    ok: true,
+    dryRun: true,
+    beforeRaw: before.toString(),
+    beforeSol: Number(before) / LAMPORTS_PER_SOL
+  };
+}
 
-    const after = await getSolBalanceRaw(wallet);
-    const claimedRaw = after > before ? after - before : 0n;
+// ✅ Retry loop: megvárjuk amíg a Helius RPC frissíti a balance-t
+let after = before;
+for (let attempt = 0; attempt < 5; attempt++) {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  after = await getSolBalanceRaw(wallet);
+  if (after > before) break;
+}
 
-    if (claimedRaw <= 0n) {
-      return {
-        ok: true,
-        claimSignature: claim.signature,
-        claimedRaw: "0",
-        skipped: true,
-        reason: "no positive balance delta after claim"
-      };
-    }
+const claimedRaw = after > before ? after - before : 0n;
+
+if (claimedRaw <= 0n) {
+  return {
+    ok: true,
+    claimSignature: claim.signature,
+    claimedRaw: "0",
+    skipped: true,
+    reason: "no positive balance delta after claim"
+  };
+}
 
     if (claimedRaw < config.claimSwapMinSolRaw) {
       return {

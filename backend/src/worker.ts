@@ -29,6 +29,7 @@ console.log("cronSnapshot:", config.cronSnapshot);
 console.log("cronDistribute:", config.cronDistribute);
 console.log("HOLDER_TOKEN_A_MINT:", process.env.HOLDER_TOKEN_A_MINT);
 console.log("HOLDER_TOKEN_B_MINT:", process.env.HOLDER_TOKEN_B_MINT);
+console.log("DISTRIBUTION_WALLET_PUBLIC_KEY:", process.env.DISTRIBUTION_WALLET_PUBLIC_KEY);
 
 if (config.claimEnabled) {
   cron.schedule(config.claimCron, async () => {

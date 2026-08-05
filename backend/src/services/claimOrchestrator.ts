@@ -3,7 +3,7 @@ import {
   Connection,
   PublicKey,
   LAMPORTS_PER_SOL,
-  Keypair
+  Keypair,
 } from "@solana/web3.js";
 import { Prisma } from "@prisma/client";
 import { claimCreatorFees } from "./claimService.js";
@@ -25,7 +25,6 @@ function getCreatorKeypair(): Keypair {
   if (!config.creatorWalletPrivateKey) {
     throw new Error("Missing CREATOR_WALLET_PRIVATE_KEY");
   }
-
   return Keypair.fromSecretKey(bs58.decode(config.creatorWalletPrivateKey));
 }
 
@@ -58,94 +57,50 @@ function isPrismaUniqueError(
 
 export async function claimAndRegisterRewardIfAny() {
   const now = Date.now();
-
   if (claimRunning && now - lastClaimStartedAt < config.claimLockTtlMs) {
-    return {
-      ok: false,
-      skipped: true,
-      reason: "claim already running"
-    };
+    return { ok: false, skipped: true, reason: "claim already running" };
   }
-
   claimRunning = true;
   lastClaimStartedAt = now;
 
   try {
     const wallet = config.creatorWalletPublicKey;
-
-    if (!wallet) {
-      throw new Error("Missing CREATOR_WALLET_PUBLIC_KEY");
-    }
-
-    if (!config.distributionWalletPublicKey) {
+    if (!wallet) throw new Error("Missing CREATOR_WALLET_PUBLIC_KEY");
+    if (!config.distributionWalletPublicKey)
       throw new Error("Missing DISTRIBUTION_WALLET_PUBLIC_KEY");
-    }
 
-    // ✅ Balance előellenőrzés — Pump.fun API hívás ELŐTT
-    // Csak akkor claimelünk ha a creator wallet elérte a CLAIM_MIN_RAW küszöböt
-    // (0.15 SOL = 150_000_000 lamport alapértelmezetten)
-    if (config.claimMinRaw > 0n) {
-      const preCheckBalance = await getSolBalanceRaw(wallet);
-      if (preCheckBalance < config.claimMinRaw) {
-        return {
-          ok: true,
-          skipped: true,
-          reason:
-            `creator wallet balance below CLAIM_MIN_RAW threshold ` +
-            `(${preCheckBalance.toString()} < ${config.claimMinRaw.toString()})`,
-          currentBalanceRaw: preCheckBalance.toString(),
-          currentBalanceSol: (Number(preCheckBalance) / LAMPORTS_PER_SOL).toFixed(6),
-          claimMinRaw: config.claimMinRaw.toString(),
-          claimMinSol: (Number(config.claimMinRaw) / LAMPORTS_PER_SOL).toFixed(6)
-        };
-      }
-    }
+    // ═══════════════════════════════════════════════════
+    // Phase 1 — CLAIM + TRANSFER
+    // Always runs, also even small amount claims.
+    // SOL claiming in the distribution wallet.
+    // ═══════════════════════════════════════════════════
 
     const before = await getSolBalanceRaw(wallet);
-const claim = (await claimCreatorFees()) as ClaimResult;
+    const claim = (await claimCreatorFees()) as ClaimResult;
 
-if (isDryRunClaim(claim)) {
-  return {
-    ok: true,
-    dryRun: true,
-    beforeRaw: before.toString(),
-    beforeSol: Number(before) / LAMPORTS_PER_SOL
-  };
-}
-
-// ✅ Retry loop: megvárjuk amíg a Helius RPC frissíti a balance-t
-let after = before;
-for (let attempt = 0; attempt < 5; attempt++) {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  after = await getSolBalanceRaw(wallet);
-  if (after > before) break;
-}
-
-const claimedRaw = after > before ? after - before : 0n;
-
-if (claimedRaw <= 0n) {
-  return {
-    ok: true,
-    claimSignature: claim.signature,
-    claimedRaw: "0",
-    skipped: true,
-    reason: "no positive balance delta after claim"
-  };
-}
-
-    if (claimedRaw < config.claimSwapMinSolRaw) {
+    if (isDryRunClaim(claim)) {
       return {
         ok: true,
-        claimSignature: claim.signature,
-        claimedRaw: claimedRaw.toString(),
-        minClaimSwapSolRaw: config.claimSwapMinSolRaw.toString(),
-        skipped: true,
-        reason:
-          `claimed SOL below claim swap threshold ` +
-          `(${claimedRaw.toString()} < ${config.claimSwapMinSolRaw.toString()})`
+        dryRun: true,
+        beforeRaw: before.toString(),
+        beforeSol: (Number(before) / LAMPORTS_PER_SOL).toFixed(6),
       };
     }
 
+    const after = await getSolBalanceRaw(wallet);
+    const claimedRaw = after > before ? after - before : 0n;
+
+    if (claimedRaw <= 0n) {
+      return {
+        ok: true,
+        claimSignature: claim.signature,
+        claimedRaw: "0",
+        skipped: true,
+        reason: "no positive balance delta after claim",
+      };
+    }
+
+    // A proportional portion of the claimed amount is transferred to the distribution wallet
     const transferToDistributionRaw =
       (claimedRaw * BigInt(config.claimToDistributionBps)) / 10_000n;
 
@@ -155,7 +110,7 @@ if (claimedRaw <= 0n) {
         claimSignature: claim.signature,
         claimedRaw: claimedRaw.toString(),
         skipped: true,
-        reason: "claimed amount too small to transfer to distribution wallet"
+        reason: "claimed amount too small to transfer (claimToDistributionBps result = 0)",
       };
     }
 
@@ -166,27 +121,67 @@ if (claimedRaw <= 0n) {
       connection,
       fromKeypair: creatorKeypair,
       toPubkey: distributionPubkey,
-      lamports: transferToDistributionRaw
+      lamports: transferToDistributionRaw,
     });
 
+    console.log(
+      `[claim] Phase 1 done: claimed=${claimedRaw} lamport, ` +
+      `transferred=${transferToDistributionRaw} lamport → distribution wallet, ` +
+      `tx=${transferSignature}`
+    );
+
+    // ═══════════════════════════════════════════════════
+    // PHASE 2 — SWAP + REWARD EVENT
+    // We examine the ENTIRE current balance of the distribution wallet
+    // — not just the delta that was just claimed.
+    // So small claims gradually collected.
+    // ═══════════════════════════════════════════════════
+
+    const distributionBalanceRaw = await getSolBalanceRaw(
+      config.distributionWalletPublicKey
+    );
+
+    // SOL reserve: tx díjakra és token-account creationre félretett összeg
+    const reserveRaw =
+      config.distributionMinSolReserveLamports ?? 50_000_000n; // default 0.05 SOL
+
+    // A swappable összeg a reserve feletti egyenleg distributionSwapBps aránya
+    const aboveReserve =
+      distributionBalanceRaw > reserveRaw
+        ? distributionBalanceRaw - reserveRaw
+        : 0n;
+
     const swappableRaw =
-      (transferToDistributionRaw * BigInt(config.distributionSwapBps)) / 10_000n;
+      (aboveReserve * BigInt(config.distributionSwapBps)) / 10_000n;
 
-    const reserveRaw = transferToDistributionRaw - swappableRaw;
+    console.log(
+      `[claim] Phase 2 check: distributionBalance=${distributionBalanceRaw} lamport, ` +
+      `reserve=${reserveRaw}, aboveReserve=${aboveReserve}, ` +
+      `swappable=${swappableRaw}, threshold=${config.claimSwapMinSolRaw}`
+    );
 
-    if (swappableRaw <= 0n) {
+    // If the swappable amount has not yet reached the threshold → collection continues
+    if (swappableRaw < config.claimSwapMinSolRaw) {
       return {
         ok: true,
         claimSignature: claim.signature,
         transferSignature,
         claimedRaw: claimedRaw.toString(),
+        claimedSol: (Number(claimedRaw) / LAMPORTS_PER_SOL).toFixed(6),
         transferredRaw: transferToDistributionRaw.toString(),
-        reserveRaw: reserveRaw.toString(),
+        distributionBalanceRaw: distributionBalanceRaw.toString(),
+        distributionBalanceSol: (Number(distributionBalanceRaw) / LAMPORTS_PER_SOL).toFixed(6),
+        swappableRaw: swappableRaw.toString(),
+        thresholdRaw: config.claimSwapMinSolRaw.toString(),
         skipped: true,
-        reason: "nothing left to swap after distribution transfer"
+        reason:
+          `distribution wallet swappable (${swappableRaw}) < ` +
+          `CLAIM_SWAP_MIN_SOL_RAW (${config.claimSwapMinSolRaw}) — ` +
+          `accumulating, not swapping yet`,
       };
     }
 
+    // Threshold reached → initiate swap
     const swap = await swapSolToRewardToken(swappableRaw);
     const rewardRaw = BigInt(swap.actualOutAmountRaw);
 
@@ -199,13 +194,12 @@ if (claimedRaw <= 0n) {
         claimedRaw: claimedRaw.toString(),
         transferredRaw: transferToDistributionRaw.toString(),
         swappableRaw: swappableRaw.toString(),
-        reserveRaw: reserveRaw.toString(),
         rewardRaw: rewardRaw.toString(),
         minRewardPayoutRaw: config.minRewardPayoutRaw.toString(),
         skipped: true,
         reason:
-          `swapped ${config.rewardSymbol} below MIN_REWARD_PAYOUT_RAW ` +
-          `(${rewardRaw.toString()} < ${config.minRewardPayoutRaw.toString()})`
+          `swapped ${config.rewardSymbol} (${rewardRaw}) < ` +
+          `MIN_REWARD_PAYOUT_RAW (${config.minRewardPayoutRaw})`,
       };
     }
 
@@ -214,13 +208,16 @@ if (claimedRaw <= 0n) {
         sourceTx: swap.signature,
         grossPayoutRaw: rewardRaw,
         notes:
-          `Automatic creator fee claim from ${claim.signature}, ` +
-          `${config.claimToDistributionBps} bps ` +
-          `(${transferToDistributionRaw.toString()} raw) transferred to distribution wallet via ${transferSignature}, ` +
-          `${config.distributionSwapBps} bps ` +
-          `(${swappableRaw.toString()} raw) swapped from SOL to ${config.rewardSymbol}, ` +
-          `${reserveRaw.toString()} raw kept as SOL fee reserve`
+          `Auto claim: ${claim.signature}, ` +
+          `${config.claimToDistributionBps} bps (${transferToDistributionRaw} raw) → ` +
+          `distribution wallet via ${transferSignature}, ` +
+          `swapped ${swappableRaw} raw SOL → ${rewardRaw} raw ${config.rewardSymbol}`,
       });
+
+      console.log(
+        `[claim] Phase 2 done: swapped=${swappableRaw} lamport → ` +
+        `${rewardRaw} ${config.rewardSymbol}, rewardEventId=${reward.id}`
+      );
 
       return {
         ok: true,
@@ -229,12 +226,11 @@ if (claimedRaw <= 0n) {
         swapSignature: swap.signature,
         rewardEventId: reward.id,
         claimedRaw: claimedRaw.toString(),
+        claimedSol: (Number(claimedRaw) / LAMPORTS_PER_SOL).toFixed(6),
         transferredRaw: transferToDistributionRaw.toString(),
         swappableRaw: swappableRaw.toString(),
-        reserveRaw: reserveRaw.toString(),
         rewardRaw: rewardRaw.toString(),
-        minRewardPayoutRaw: config.minRewardPayoutRaw.toString(),
-        skipped: false
+        skipped: false,
       };
     } catch (error) {
       if (isPrismaUniqueError(error)) {
@@ -244,16 +240,11 @@ if (claimedRaw <= 0n) {
           transferSignature,
           swapSignature: swap.signature,
           claimedRaw: claimedRaw.toString(),
-          transferredRaw: transferToDistributionRaw.toString(),
-          swappableRaw: swappableRaw.toString(),
-          reserveRaw: reserveRaw.toString(),
           rewardRaw: rewardRaw.toString(),
-          minRewardPayoutRaw: config.minRewardPayoutRaw.toString(),
           skipped: true,
-          reason: "reward event already registered for this swap transaction"
+          reason: "reward event already registered for this swap transaction",
         };
       }
-
       throw error;
     }
   } finally {

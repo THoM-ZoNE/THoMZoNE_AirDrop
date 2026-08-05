@@ -6,6 +6,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum DistributionStatus {
+  sent
+  failed
+  retried
+}
+
 model Snapshot {
   id                      String   @id @default(cuid())
   createdAt               DateTime @default(now())
@@ -57,7 +63,7 @@ model Distribution {
   payoutRawSent      BigInt
 
   txSignature        String?
-  status             String
+  status             DistributionStatus
   errorMessage       String?
 
   snapshot           Snapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)

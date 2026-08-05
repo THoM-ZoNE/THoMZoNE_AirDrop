@@ -5,7 +5,7 @@ import { prisma } from "./lib/prisma.js";
 import { config } from "./lib/config.js";
 import { requireAdmin } from "./lib/adminAuth.js";
 import { createSnapshot } from "./services/snapshotService.js";
-import { distributeSnapshot } from "./services/distributionService.js";
+import { distributeSnapshot, retryFailedDistributions } from "./services/distributionService.js";
 import { CronExpressionParser } from "cron-parser";
 import {
   registerRewardEvent,
@@ -174,6 +174,16 @@ app.post("/snapshots/:id/distribute", async (req, res) => {
   }
 });
 
+// POST /admin/retry-failed/:snapshotId
+app.post("/retry-failed/:snapshotId", async (req, res) => {
+  try {
+    const result = await retryFailedDistributions(req.params.snapshotId);
+    res.json({ ok: true, ...result });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: String(error) });
+  }
+});
+
 // --- ADMIN ---
 app.post("/admin/rewards", requireAdmin, async (req, res) => {
   try {
@@ -218,5 +228,5 @@ app.post("/admin/process-next", requireAdmin, async (_req, res) => {
 });
 
 app.listen(config.port, () => {
-  console.log(`Racoon Bank backend listening on :${config.port}`);
+  console.log(`TZ Airdrop backend listening on :${config.port}`);
 });
